@@ -26,6 +26,30 @@ bool isalphanum (char chr)
   // faire le reste
   return false;
 }
+
+bool isOperator (char chr)
+{
+  if (chr == '-' ||
+      chr == '+'||
+      chr == '/' ||
+      chr == '*' ||
+      chr == 'E' || 
+      chr == 'O' || 
+      chr == '<' || 
+      chr == '<' || 
+      chr == '>' || 
+      chr == '>' || 
+      chr == '=' || 
+      chr == 'T' || 
+      chr == 'U' || 
+      chr == '!'
+    ) {
+     return true;
+  }
+  // faire le reste
+  return false;
+}
+
 void lexer_assert_openbracket (buffer_t *buffer, char *msg)
 {
   char next = buf_getchar(buffer);
@@ -96,6 +120,31 @@ char *lexer_getalphanum (buffer_t *buffer)
   buf_unlock(buffer);
 
   if (count == LEXEM_SIZE) {
+    printf("Error parsing identifier: identifier too long!. exiting\n");
+    exit(1); // arrêt brutal du programme
+  }
+
+  char *out = malloc(sizeof(char) * count);
+  save[count - 1] = '\0';
+  strncpy(out, save, count);
+  
+  return out;
+}
+
+char *lexer_getop (buffer_t *buffer)
+{
+  char save[LEXEM_OP_SIZE] = "";
+  size_t count = 0;
+  buf_lock(buffer);
+  do {
+    save[count] = buf_getchar(buffer);
+    count++;
+  } while (count < LEXEM_OP_SIZE && isOperator(save[count - 1]));
+
+  buf_rollback(buffer, 1);
+  buf_unlock(buffer);
+
+  if (count == LEXEM_OP_SIZE) {
     printf("Error parsing identifier: identifier too long!. exiting\n");
     exit(1); // arrêt brutal du programme
   }
