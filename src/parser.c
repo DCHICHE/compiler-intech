@@ -104,9 +104,8 @@ ast_t *parse_expression_next_symbol(buffer_t *buffer, symbol_t **table)
   // elle doit retourner l'ast_t correspondant à ce symbole
   // il n'est pas exclu de devoir rajouter des paramètres à cette fonction permettant par exemple de lui indiquer quels sont les types d'ast qui sont
   // autorisés à ce moment de la lecture (ex: une opérande après avoir lu un opérateur, ex pas de fin d'expression juste après un opérateur, etc.)
-  printf("IM HERE BITCH");
   char *op = lexer_getop(buffer);
-  printf("%s",op);
+  printf("%s", op);
 
   return NULL; // TODO
 }
@@ -152,28 +151,30 @@ ast_t *parse_expression(buffer_t *buffer, symbol_t **table)
     {
       //        soient a le symbole en sommet de pile et b le symbole pointé par i
       ast_t *a = stack_top(pile);
-
-      b = parse_expression_next_symbol(buffer, table);
-      //        si a a une priorité plus basse que b
-      if (ast_binary_priority(a) < ast_binary_priority(b))
+      do
       {
-        //          empiler b dans pile
-        stack_push(&pile, b);
-        //          avancer i sur le symbole suivant
-        // TODO: lire le prochain symbole
-      }
-      //        sinon
-      else
-      {
-        //          répéter
-        do
+        b = parse_expression_next_symbol(buffer, table);
+        //        si a a une priorité plus basse que b
+        if (ast_binary_priority(a) < ast_binary_priority(b))
         {
-          //            dépiler pile et empiler la valeur dépilée dans sortie
-          last_popped = stack_pop(&pile);
-          stack_push(&sortie, last_popped);
-          //            jusqu’à ce que le symbole en sommet de pile aie une priorité plus basse que le symbole le plus récemment dépilé
-        } while (ast_binary_priority(stack_top(pile)) >= ast_binary_priority(last_popped));
-      }
+          //          empiler b dans pile
+          stack_push(&pile, b);
+          //          avancer i sur le symbole suivant
+          // TODO: lire le prochain symbole
+        }
+        //        sinon
+        else
+        {
+          //          répéter
+          do
+          {
+            //            dépiler pile et empiler la valeur dépilée dans sortie
+            last_popped = stack_pop(&pile);
+            stack_push(&sortie, last_popped);
+            //            jusqu’à ce que le symbole en sommet de pile aie une priorité plus basse que le symbole le plus récemment dépilé
+          } while (ast_binary_priority(stack_top(pile)) >= ast_binary_priority(last_popped));
+        }
+      } while (b != NULL);
     }
   }
   return NULL;
