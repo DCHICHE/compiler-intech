@@ -138,7 +138,6 @@ char *lexer_getop (buffer_t *buffer)
   buf_lock(buffer);
   do {
     save[count] = buf_getchar(buffer);
-    printf("%c",save[count]);
     count++;
   } while (count < LEXEM_OP_SIZE && isOperator(save[count - 1]));
 

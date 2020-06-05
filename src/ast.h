@@ -111,6 +111,7 @@ ast_list_t *ast_list_new_node (ast_t *elem);
 ast_list_t *ast_list_add (ast_list_t **list, ast_t *elem);
 char *ast_get_var_type (ast_t *ast);
 char *ast_binary_to_string (ast_binary_e op);
+ast_binary_e *ast_string_to_binary (char op);
 void ast_print (ast_t *ast);
 void ast_print_binary_or_integer (ast_t *item);
 

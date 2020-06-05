@@ -106,8 +106,9 @@ ast_t *parse_expression_next_symbol(buffer_t *buffer, symbol_t **table)
   // autorisés à ce moment de la lecture (ex: une opérande après avoir lu un opérateur, ex pas de fin d'expression juste après un opérateur, etc.)
   char *op = lexer_getop(buffer);
   printf("%s", op);
-
-  return NULL; // TODO
+  ast_binary_e a = ast_string_to_binary(op)
+  //  ast binary to string ?
+  return a; // TODO
 }
 
 ast_t *pile_vers_arbre(mystack_t *pile)
